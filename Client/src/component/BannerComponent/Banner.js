@@ -10,8 +10,8 @@ const slides = [
   },
   {
     image: "/assets/images/Blood-Donation-2.png",
-    title: "Be an Organ Donor",
-    text: "Give the gift of life even after life.",
+    title: "Be a Blood Donor",
+    text: "Give the gift of life - donate blood regularly.",
   }
 ];
 
@@ -31,7 +31,8 @@ function Banner() {
   const shouldHideBanner =
     location.pathname === "/login" ||
     localStorage.getItem("role") === "admin" ||
-    localStorage.getItem("role") === "donor";
+    localStorage.getItem("role") === "donor" ||
+    localStorage.getItem("role") === "hospital";
 
   if (shouldHideBanner) {
     return null;

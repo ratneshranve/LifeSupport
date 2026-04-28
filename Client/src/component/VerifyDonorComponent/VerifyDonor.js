@@ -8,20 +8,24 @@ function VerifyDonor() {
 
   useEffect(() => {
     axios.get(donorApi + "fetch?email=" + params.email).then((response) => {
-      if (response.data[0]?.__v === 0) {
+      const donor = response.data[0];
+      if (donor && donor.status === 0) {
         const updateDetails = {
           condition_obj: { email: params.email },
-          content_obj: { status: 1, __v: 1 }
+          content_obj: { status: 1 }
         };
         axios.patch(donorApi + "update", updateDetails).then(() => {
-          console.log("User verified...");
-          // Hard reload after update
-          window.location.href = "/login"; // or use replace() to prevent back navigation
+          console.log("User verified successfully");
+          window.location.href = "/login";
+        }).catch(err => {
+          console.error("Verification update failed", err);
         });
       } else {
-        // Already verified
+        // Already verified or not found
         window.location.href = "/login";
       }
+    }).catch(err => {
+      console.error("Fetch donor for verification failed", err);
     });
   }, [params.email]);
 

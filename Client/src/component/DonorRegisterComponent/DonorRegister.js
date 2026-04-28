@@ -1,12 +1,10 @@
 import './DonorRegister.css';
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
 
 function DonorRegister() {
-  const navigate = useNavigate();
   const [output, setOutput] = useState(null);
-  const [form, setForm] = useState({
+  const [donorForm, setDonorForm] = useState({
     name: '',
     email: '',
     password: '',
@@ -14,202 +12,206 @@ function DonorRegister() {
     address: '',
     city: '',
     gender: '',
-    donorType: '',
     bloodGroup: '',
-    organs: [],
-    available: true,
   });
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((prev) => {
-      if (name === 'organs') {
-        const updatedOrgans = checked
-          ? [...prev.organs, value]
-          : prev.organs.filter((org) => org !== value);
-        return { ...prev, organs: updatedOrgans };
-      }
-      if (name === 'donorType') {
-        return { ...prev, donorType: value, bloodGroup: '', organs: [] };
-      }
-      return { ...prev, [name]: type === 'checkbox' ? checked : value };
-    });
+    const { name, value } = e.target;
+    setDonorForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = () => {
-    const {
-      name,
-      email,
-      password,
-      mobile,
-      address,
-      city,
-      gender,
-      donorType,
-      bloodGroup,
-      organs,
-      available,
-    } = form;
+  const handleSubmit = async () => {
+    try {
+      const { name, email, password, mobile, address, city, gender, bloodGroup } = donorForm;
 
-    if (!name || !email || !password || !mobile || !address || !city || !gender || !donorType)
-      return setOutput('Please fill all required fields.');
+      if (!name) return setOutput('Name is required.');
+      if (!email) return setOutput('Email is required.');
+      if (!password) return setOutput('Password is required.');
+      if (!mobile) return setOutput('Mobile number is required.');
+      if (!address) return setOutput('Address is required.');
+      if (!city) return setOutput('Please select a city.');
+      if (!gender) return setOutput('Please select your gender.');
+      if (!bloodGroup) return setOutput('Please select your blood group.');
 
-    if (password.length < 5 || password.length > 10)
-      return setOutput('Password must be 5–10 characters.');
+      // Name validation
+      if (name.length < 3) {
+        return setOutput('Name must be at least 3 characters long.');
+      }
 
-    if (donorType === 'blood' && !bloodGroup)
-      return setOutput('Please select blood group.');
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return setOutput('Please enter a valid email address.');
+      }
 
-    if (donorType === 'organ' && organs.length === 0)
-      return setOutput('Please select at least one organ.');
+      // Password validation (matching mongoose schema: 5-10 chars)
+      if (password.length < 5 || password.length > 10) {
+        return setOutput('Password must be between 5 and 10 characters.');
+      }
 
-    const donorData = {
-      name,
-      email,
-      password,
-      mobile,
-      address,
-      city,
-      gender,
-      donorType,
-      available,
-    };
+      // Mobile validation (10 digits)
+      const mobileRegex = /^[0-9]{10}$/;
+      if (!mobileRegex.test(mobile)) {
+        return setOutput('Mobile number must be exactly 10 digits.');
+      }
 
-    if (donorType === 'blood') donorData.bloodGroup = bloodGroup;
-    else if (donorType === 'organ') donorData.organs = organs;
+      // Address validation
+      if (address.length < 10) {
+        return setOutput('Address should be at least 10 characters long for better location accuracy.');
+      }
 
-    axios
-      .post('http://localhost:3001/donor/register', donorData)
-      .then(() => {
-        setOutput('Check The Email Inbox For Verification Link');
-        // setTimeout(() => {
-        //   navigate('/login');
-        // }, 2000);
-      })
-      .catch(() => {
-        setOutput('Registration failed.');
+      const res = await axios.post('http://localhost:3001/donor/register', {
+        ...donorForm,
+        donorType: 'blood',
+        available: false, // set default true silently
       });
+
+      if (res.status === 201) {
+        setOutput('Registration successful! Please login and upload your health report for verification.');
+        setDonorForm({
+          name: '',
+          email: '',
+          password: '',
+          mobile: '',
+          address: '',
+          city: '',
+          gender: '',
+          bloodGroup: '',
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      const errorMsg = err.response?.data?.status || 'Registration failed. Please try again later.';
+      setOutput(errorMsg);
+    }
   };
 
   return (
     <div className="register-container container py-5">
       <div className="row justify-content-center">
         <div className="col-lg-8 col-md-10">
-          <div className="form-card register-form-card bg-white p-4 shadow rounded">
-            {output && <div className="alert alert-info">{output}</div>}
+          <div className="form-card bg-white p-4 shadow rounded">
             <h2 className="mb-4 text-center">Donor Registration</h2>
-            <form>
-              {/* Section 1: Basic Info */}
-              <h5 className="form-section-title">Personal Information</h5>
-              <div className="row">
-                <div className="col-md-6 mb-3">
-                  <label>Name</label>
-                  <input className="form-control" name="name" value={form.name} onChange={handleChange} />
-                </div>
-                <div className="col-md-6 mb-3">
-                  <label>Email</label>
-                  <input className="form-control" type="email" name="email" value={form.email} onChange={handleChange} />
-                </div>
-                <div className="col-md-6 mb-3">
-                  <label>Password</label>
-                  <input className="form-control" type="password" name="password" value={form.password} onChange={handleChange} />
-                </div>
-                <div className="col-md-6 mb-3">
-                  <label>Mobile</label>
-                  <input className="form-control" name="mobile" value={form.mobile} onChange={handleChange} />
-                </div>
-                <div className="col-12 mb-3">
-                  <label>Address</label>
-                  <textarea className="form-control" name="address" value={form.address} onChange={handleChange}></textarea>
-                </div>
+            {output && <div className="alert alert-info">{output}</div>}
+
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <label>Name</label>
+                <input
+                  className="form-control"
+                  name="name"
+                  value={donorForm.name}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
-              {/* Section 2: Location & Identity */}
-              <h5 className="form-section-title">Location & Identity</h5>
-              <div className="row">
-                <div className="col-md-6 mb-3">
-                  <label>City</label>
-                  <select className="form-control" name="city" value={form.city} onChange={handleChange}>
-                    <option value="">Select City</option>
-                    <option>Indore</option>
-                    <option>Bhopal</option>
-                    <option>Ujjain</option>
-                    <option>Dewas</option>
-                  </select>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <label>Gender</label>
-                  <div className="d-flex gap-3">
-                    {['M', 'F', 'Other'].map((g) => (
-                      <label key={g} className="me-3">
-                        <input type="radio" name="gender" value={g} checked={form.gender === g} onChange={handleChange} /> {g}
-                      </label>
-                    ))}
-                  </div>
-                </div>
+              <div className="col-md-6 mb-3">
+                <label>Email</label>
+                <input
+                  className="form-control"
+                  type="email"
+                  name="email"
+                  value={donorForm.email}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
-              {/* Section 3: Donation Preferences */}
-              <h5 className="form-section-title">Donation Preferences</h5>
-              <div className="mb-3">
-                <label>Donor Type</label>
-                <select className="form-control" name="donorType" value={form.donorType} onChange={handleChange}>
-                  <option value="">Select Type</option>
-                  <option value="blood">Blood</option>
-                  <option value="organ">Organ</option>
+              <div className="col-md-6 mb-3">
+                <label>Password</label>
+                <input
+                  className="form-control"
+                  type="password"
+                  name="password"
+                  value={donorForm.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <label>Mobile</label>
+                <input
+                  className="form-control"
+                  name="mobile"
+                  value={donorForm.mobile}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="col-12 mb-3">
+                <label>Address</label>
+                <textarea
+                  className="form-control"
+                  name="address"
+                  value={donorForm.address}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="col-md-6 mb-3">
+                <label>City</label>
+                <select
+                  className="form-control"
+                  name="city"
+                  value={donorForm.city}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select City</option>
+                  <option>Indore</option>
+                  <option>Bhopal</option>
+                  <option>Ujjain</option>
+                  <option>Gwalior</option>
+                  <option>Dewas</option>
                 </select>
               </div>
 
-              {form.donorType === 'blood' && (
-                <div className="mb-3">
-                  <label>Blood Group</label>
-                  <select className="form-control" name="bloodGroup" value={form.bloodGroup} onChange={handleChange}>
-                    <option value="">Select Blood Group</option>
-                    {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((group) => (
-                      <option key={group}>{group}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {form.donorType === 'organ' && (
-                <div className="mb-3">
-                  <label>Organs to Donate</label>
-                  {['Kidney', 'Liver', 'Heart', 'Lungs'].map((org) => (
-                    <div className="form-check" key={org}>
+              <div className="col-md-6 mb-3">
+                <label>Gender</label>
+                <div className="d-flex gap-3">
+                  {['M', 'F', 'Other'].map((g) => (
+                    <label key={g}>
                       <input
-                        type="checkbox"
-                        className="form-check-input"
-                        name="organs"
-                        value={org}
-                        checked={form.organs.includes(org)}
+                        type="radio"
+                        name="gender"
+                        value={g}
+                        checked={donorForm.gender === g}
                         onChange={handleChange}
-                      />
-                      <label className="form-check-label">{org}</label>
-                    </div>
+                        required
+                      />{' '}
+                      {g}
+                    </label>
                   ))}
                 </div>
-              )}
+              </div>
 
-              <div className="mb-3 form-check">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  name="available"
-                  checked={form.available}
+              <div className="col-md-6 mb-3">
+                <label>Blood Group</label>
+                <select
+                  className="form-control"
+                  name="bloodGroup"
+                  value={donorForm.bloodGroup}
                   onChange={handleChange}
-                />
-                <label className="form-check-label">Available for donation</label>
+                  required
+                >
+                  <option value="">Select Blood Group</option>
+                  {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((bg) => (
+                    <option key={bg}>{bg}</option>
+                  ))}
+                </select>
               </div>
+            </div>
 
-              <button type="button" className="btn btn-brownish-red w-100" onClick={handleSubmit}>
-                Register
-              </button>
-
-              <div className="text-center mt-3">
-                Already registered? <Link to="/login">Login here</Link>
-              </div>
-            </form>
+            <button className="btn btn-brownish-red w-100 mt-3" onClick={handleSubmit}>
+              Register
+            </button>
           </div>
         </div>
       </div>

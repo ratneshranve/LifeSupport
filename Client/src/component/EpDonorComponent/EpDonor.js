@@ -13,15 +13,14 @@ function EpDonor() {
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [gender, setGender] = useState('');
-  const [donorType, setDonorType] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
-  const [organ, setOrgan] = useState('');
   const [available, setAvailable] = useState(false);
   const [output, setOutput] = useState('');
 
   useEffect(() => {
-    axios.get(`${donorApi}fetch?email=${localStorage.getItem("email")}`)
-      .then(res => {
+    axios
+      .get(`${donorApi}fetch?email=${localStorage.getItem("email")}`)
+      .then((res) => {
         const donor = res.data[0];
         setName(donor.name || '');
         setEmail(donor.email || '');
@@ -29,32 +28,46 @@ function EpDonor() {
         setAddress(donor.address || '');
         setCity(donor.city || '');
         setGender(donor.gender || '');
-        setDonorType(donor.donorType || '');
         setBloodGroup(donor.bloodGroup || '');
-        setOrgan(donor.organ || '');
         setAvailable(donor.available || false);
       })
       .catch(() => setOutput("Failed to load donor profile"));
   }, []);
 
   const handleSubmit = () => {
+    if (!name || !mobile || !address || !city || !gender || !bloodGroup) {
+      return setOutput("All fields are required");
+    }
+
+    if (name.length < 3) {
+      return setOutput("Name must be at least 3 characters long");
+    }
+
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(mobile)) {
+      return setOutput("Mobile number must be exactly 10 digits");
+    }
+
+    if (address.length < 10) {
+      return setOutput("Address must be at least 10 characters long");
+    }
+
     const updatedDonor = {
       condition_obj: { email },
-     content_obj: {
-  name,
-  mobile,
-  address,
-  city,
-  gender,
-  donorType,
-  bloodGroup: donorType === "blood" ? bloodGroup : "",
-  organs: donorType === "organ" ? [organ] : [],
-  available
-}
-
+      content_obj: {
+        name,
+        mobile,
+        address,
+        city,
+        gender,
+        donorType: "blood", // fixed type
+        bloodGroup,
+        available,
+      },
     };
 
-    axios.patch(`${donorApi}update`, updatedDonor)
+    axios
+      .patch(`${donorApi}update`, updatedDonor)
       .then(() => {
         setOutput("Donor profile updated successfully");
         alert("Donor profile updated successfully");
@@ -65,9 +78,8 @@ function EpDonor() {
         localStorage.setItem("address", address);
         localStorage.setItem("city", city);
         localStorage.setItem("gender", gender);
-        localStorage.setItem("donorType", donorType);
-        localStorage.setItem("bloodGroup", donorType === "blood" ? bloodGroup : "");
-        localStorage.setItem("organs", donorType === "organ" ? organ : "");
+        localStorage.setItem("donorType", "blood");
+        localStorage.setItem("bloodGroup", bloodGroup);
         localStorage.setItem("available", available);
 
         navigate("/donor");
@@ -77,7 +89,7 @@ function EpDonor() {
 
   return (
     <div className="epdonor-container">
-      <h2 className="form-title">Edit Donor Profile</h2>
+      <h2 className="form-title">Edit Blood Donor Profile</h2>
       {output && <div className="output-msg">{output}</div>}
 
       <form className="epdonor-form">
@@ -127,44 +139,18 @@ function EpDonor() {
           </label>
         </div>
 
-        <label>Donor Type:</label>
-        <select value={donorType} onChange={e => setDonorType(e.target.value)}>
-          <option value="">Select Donor Type</option>
-          <option value="blood">Blood</option>
-          <option value="organ">Organ</option>
+        <label>Blood Group:</label>
+        <select value={bloodGroup} onChange={e => setBloodGroup(e.target.value)}>
+          <option value="">Select Blood Group</option>
+          <option>O+</option>
+          <option>O-</option>
+          <option>A+</option>
+          <option>A-</option>
+          <option>B+</option>
+          <option>B-</option>
+          <option>AB+</option>
+          <option>AB-</option>
         </select>
-
-        {donorType === "blood" && (
-          <>
-            <label>Blood Group:</label>
-            <select value={bloodGroup} onChange={e => setBloodGroup(e.target.value)}>
-              <option value="">Select Blood Group</option>
-              <option>O+</option>
-              <option>O-</option>
-              <option>A+</option>
-              <option>A-</option>
-              <option>B+</option>
-              <option>B-</option>
-              <option>AB+</option>
-              <option>AB-</option>
-            </select>
-          </>
-        )}
-
-        {donorType === "organ" && (
-          <>
-            <label>Select Organ:</label>
-            <select value={organ} onChange={e => setOrgan(e.target.value)}>
-              <option value="">Select Organ</option>
-              <option value="kidney">Kidney</option>
-              <option value="liver">Liver</option>
-              <option value="heart">Heart</option>
-              <option value="lungs">Lungs</option>
-              <option value="pancreas">Pancreas</option>
-              <option value="intestine">Intestine</option>
-            </select>
-          </>
-        )}
 
         <label>
           <input
@@ -172,7 +158,7 @@ function EpDonor() {
             checked={available}
             onChange={e => setAvailable(e.target.checked)}
           />
-          Available for Donation
+          Available for Blood Donation
         </label>
 
         <button type="button" onClick={handleSubmit}>Update Profile</button>

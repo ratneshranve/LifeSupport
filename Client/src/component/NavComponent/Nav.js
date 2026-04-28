@@ -58,6 +58,52 @@ setInterval(()=>{
       </>
         )
      }
+     else if(localStorage.getItem('role')==="hospital")
+     { 
+        setNavContent(
+          <>
+          
+        
+      <nav className={`navbar navbar-expand-lg shadow-lg ${scrolled ? 'scrolled' : ''}`}>
+        <div className="container">
+          <a className="navbar-brand" href="index.html">
+            <img src="./assets/images/nlogo.png" className="logo img-fluid" alt="Kind Heart Charity" />
+            <span>
+              LifeSupport
+              <small>People live when People Give</small>
+            </span>
+          </a>
+
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ms-auto">
+              <li className="nav-item">
+                <Link className="nav-link click-scroll" to="/hospital">Home</Link>
+              </li>
+              <li className="nav-item">
+                 <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Update Profile</a>
+                    <div class="dropdown-menu fade-up m-0">
+                        <a class="dropdown-item"><Link to="/cpdonor">Update Password</Link></a>
+                        <a class="dropdown-item"><Link to="/epdonor">Update Details</Link></a>
+                    </div>
+                </div>
+              </li>
+              
+              <li className="nav-item ms-3">
+                <a className="nav-link custom-btn custom-border-btn btn" ><Link to="/logout">Logout</Link></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      </>
+        )
+     }
      else if(localStorage.getItem('role')==="admin")
     {
       setNavContent(
@@ -86,6 +132,9 @@ setInterval(()=>{
               </li>
               <li className="nav-item">
                 <Link className="nav-link click-scroll" to="/managedonors">Manage Donors</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link click-scroll" to="/managehospitals">Manage Hospitals</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link click-scroll" to="/queries">Queries</Link>

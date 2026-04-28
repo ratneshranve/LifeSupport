@@ -10,7 +10,7 @@ function DashBoard() {
           <div className="dashboard-col dashboard-col-50">
             <div className="dashboard-box">
               <h2 className="dashboard-title">Dashboard</h2>
-              <h5 className="dashboard-subtitle">Blood & Organ Donation Overview</h5>
+              <h5 className="dashboard-subtitle">Blood Donation Overview</h5>
               <p className="dashboard-desc">
                 Real-time statistics of lives saved, donor contributions, and urgent needs.
                 Stay informed, stay involved, and help save lives.
@@ -30,14 +30,14 @@ function DashBoard() {
                 </div>
               </div>
 
-              {/* Organ Needs */}
+              {/* Repurposed Organ Section → More Blood Alerts */}
               <div className="dashboard-col dashboard-col-50">
                 <div className="dashboard-box">
-                  <h5 className="dashboard-subtitle">Organ Donation Alerts</h5>
+                  <h5 className="dashboard-subtitle">Additional Blood Alerts</h5>
                   <ul className="dashboard-list">
-                    <li><span className="critical">Kidney</span> – 5 waiting</li>
-                    <li><span className="high">Liver</span> – 3 needed</li>
-                    <li><span className="available">Cornea</span> – Available</li>
+                    <li><span className="critical">A+</span> – Emergency Required</li>
+                    <li><span className="high">O+</span> – High Demand</li>
+                    <li><span className="available">B-</span> – Limited Stock</li>
                   </ul>
                 </div>
               </div>
@@ -63,10 +63,11 @@ function DashBoard() {
                 </div>
               </div>
 
+              {/* Repurposed Organ Matches → Blood Requests */}
               <div className="dashboard-col dashboard-col-50">
                 <div className="dashboard-counter">
-                  <div className="dashboard-counter-value">152<span>+</span></div>
-                  <div className="dashboard-counter-text">Organ Matches</div>
+                  <div className="dashboard-counter-value">120<span>+</span></div>
+                  <div className="dashboard-counter-text">Blood Requests Fulfilled</div>
                 </div>
               </div>
 

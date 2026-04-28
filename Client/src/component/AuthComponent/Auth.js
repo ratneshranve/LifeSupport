@@ -17,14 +17,20 @@ function Auth()
       if(!localStorage.getItem("token") || localStorage.getItem("role")!="donor")   
         navigate("/logout");
      }
+     else if(path=="/hospital")
+     {
+      if(!localStorage.getItem("token") || localStorage.getItem("role")!="hospital")   
+        navigate("/logout");
+     }
      else
      {
         if(localStorage.getItem("role")=="admin")            
             navigate("/admin");
         else if(localStorage.getItem("role")=="donor")
             navigate("/donor");
-        else
-            navigate("/");    
+        else if(localStorage.getItem("role")=="hospital")
+            navigate("/hospital");
+        // Removed automatic redirect to "/" to allow access to /login, /register, /verify, etc.
      }
     },[]);
     

@@ -21,8 +21,9 @@ function ManageDonors() {
   }, [search, donors, sortBy]);
 
   const fetchDonors = () => {
-    axios.get(donorApi + 'fetch')
+    axios.get(donorApi + 'fetch-all')
       .then((res) => {
+        // Only filter by role, not donorType
         const filtered = res.data.filter(d => d.role === 'donor');
         setDonors(filtered);
         setError('');
@@ -53,6 +54,15 @@ function ManageDonors() {
     }
   };
 
+  const setEligibility = (_id, eligible) => {
+    axios.patch(donorApi + `verify-eligibility/${_id}`, { eligible })
+      .then(() => {
+        alert(`Donor marked as ${eligible ? "eligible" : "not eligible"}`);
+        fetchDonors();
+      })
+      .catch(() => alert("Eligibility update failed"));
+  };
+
   const applySearchSort = () => {
     let filtered = [...donors];
 
@@ -72,7 +82,7 @@ function ManageDonors() {
     }
 
     setFilteredDonors(filtered);
-    setCurrentPage(1); // reset to first page after filtering
+    setCurrentPage(1);
   };
 
   // Pagination Logic
@@ -83,7 +93,7 @@ function ManageDonors() {
 
   return (
     <div className="manage-donors-container">
-      <h1 className="manage-donors-title">Manage Donors</h1>
+      <h1 className="manage-donors-title">Manage Blood Donors</h1>
 
       {error && <div className="alert-error">{error}</div>}
 
@@ -112,14 +122,13 @@ function ManageDonors() {
               <th>Mobile</th>
               <th>Gender</th>
               <th>City</th>
-              <th>Address</th>
-              <th>Donor Type</th>
               <th>Blood Group</th>
-              <th>Organs</th>
               <th>Available</th>
-              <th>Registered</th>
+              <th>Registered On</th>
               <th>Status</th>
-              <th>Action</th>
+              <th>Delete</th>
+              <th>Report</th>
+              <th>Eligibility</th>
             </tr>
           </thead>
           <tbody>
@@ -132,27 +141,86 @@ function ManageDonors() {
                   <td>{donor.mobile}</td>
                   <td>{donor.gender}</td>
                   <td>{donor.city}</td>
-                  <td>{donor.address}</td>
-                  <td>{donor.donorType}</td>
                   <td>{donor.bloodGroup || 'N/A'}</td>
-                  <td>{Array.isArray(donor.organs) && donor.organs.length > 0 ? donor.organs.join(', ') : 'N/A'}</td>
                   <td>{donor.available ? 'Yes' : 'No'}</td>
                   <td>{donor.info ? new Date(donor.info).toLocaleDateString() : '-'}</td>
                   <td>
                     {donor.status === 0 ? (
-                      <button className="btn-action green" onClick={() => changeStatus(donor._id, 'verify')}>Verify</button>
+                      <button className="btn-action green" title="Verify Donor" onClick={() => changeStatus(donor._id, 'verify')}>
+                        <i className="bi bi-check-lg"></i>
+                      </button>
                     ) : (
-                      <button className="btn-action orange" onClick={() => changeStatus(donor._id, 'block')}>Block</button>
+                      <button className="btn-action orange" title="Block Donor" onClick={() => changeStatus(donor._id, 'block')}>
+                        <i className="bi bi-slash-circle"></i>
+                      </button>
                     )}
                   </td>
                   <td>
-                    <button className="btn-action red" onClick={() => changeStatus(donor._id, 'delete')}>Delete</button>
+                    <button className="btn-action red" title="Delete Donor" onClick={() => changeStatus(donor._id, 'delete')}>
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </td>
+                  <td>
+                    {donor.reportUrl ? (
+                      <div className="report-cell">
+                        <a 
+                          href={`http://localhost:3001/${donor.reportUrl}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="report-link"
+                        >
+                          {donor.reportUrl.toLowerCase().endsWith('.pdf') ? (
+                            <div className="pdf-preview">
+                              <i className="bi bi-file-earmark-pdf-fill"></i>
+                              <span>PDF Report</span>
+                            </div>
+                          ) : (
+                            <div className="image-preview-container">
+                              <img
+                                src={`http://localhost:3001/${donor.reportUrl}`}
+                                alt="Report Thumbnail"
+                                className="report-thumb"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.src = "https://cdn-icons-png.flaticon.com/512/337/337946.png"; // Fallback icon
+                                }}
+                              />
+                              <div className="thumb-overlay">
+                                <i className="bi bi-eye-fill"></i>
+                              </div>
+                            </div>
+                          )}
+                        </a>
+                      </div>
+                    ) : (
+                      <span className="no-report">No Report</span>
+                    )}
+                  </td>
+                  <td>
+                    <div className="eligibility-actions">
+                      <button
+                        className="btn-action green"
+                        disabled={donor.eligible}
+                        title="Set Eligible"
+                        onClick={() => setEligibility(donor._id, true)}
+                      >
+                        <i className="bi bi-person-check-fill"></i>
+                      </button>
+                      <button
+                        className="btn-action orange"
+                        disabled={!donor.eligible}
+                        title="Set Not Eligible"
+                        onClick={() => setEligibility(donor._id, false)}
+                      >
+                        <i className="bi bi-person-x"></i>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="14" className="no-data">No donors found.</td>
+                <td colSpan="13" className="no-data">No blood donors found.</td>
               </tr>
             )}
           </tbody>

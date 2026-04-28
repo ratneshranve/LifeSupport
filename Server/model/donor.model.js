@@ -52,27 +52,19 @@ const donorSchema = mongoose.Schema({
     enum: ['M', 'F', 'Other'],
   },
 
-  donorType: {
-    type: String,
-    required: [true, 'Donor type is required'],
-    enum: ['blood', 'organ'],
-  },
+ 
 
   bloodGroup: {
     type: String,
     enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-    // Only required if donorType is 'blood'
+    
   },
 
-  organs: {
-    type: [String],
-    enum: ['Kidney', 'Liver', 'Heart', 'Lungs'],
-    // Only used if donorType is 'organ'
-  },
+ 
 
   available: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 
   lastDonated: {
@@ -88,7 +80,14 @@ const donorSchema = mongoose.Schema({
     type: Number,
     
   },
-
+eligible: {
+  type: Boolean,
+  default: false
+},
+reportUrl: {
+  type: String,
+  default: ''
+},
   info: String,
 });
 

@@ -7,21 +7,29 @@ function AdminWel() {
   const [adminName, setAdminName] = useState('Admin');
   const [queries, setQueries] = useState([]);
   const [donorsCount, setDonorsCount] = useState(0);
-  const navigate = useNavigate(); // React Router navigation
+  const [hospitalsCount, setHospitalsCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setAdminName(localStorage.getItem('name') || 'Admin');
 
+    // Fetch contact queries
     axios.get('http://localhost:3001/contact/fetch')
       .then(res => setQueries(res.data))
       .catch(() => setQueries([]));
 
-    axios.get('http://localhost:3001/donor/fetch')
+    // Fetch donors
+    axios.get('http://localhost:3001/donor/fetch-all')
       .then(res => {
-        const nonAdminDonors = res.data.filter(donor => donor.role !== 'admin');
+        const nonAdminDonors = res.data.filter(donor => donor.role === 'donor');
         setDonorsCount(nonAdminDonors.length);
       })
       .catch(() => setDonorsCount(0));
+
+    // Fetch hospitals
+    axios.get('http://localhost:3001/hospital/fetch')
+      .then(res => setHospitalsCount(res.data.length))
+      .catch(() => setHospitalsCount(0));
   }, []);
 
   return (
@@ -32,31 +40,11 @@ function AdminWel() {
       </div>
 
       <div className="dashboard-cards row mb-5">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <div className="card stat-card">
             <h5>📥 Contact Queries</h5>
             <h2>{queries.length}</h2>
             <p className="text-muted">Total Messages</p>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card stat-card">
-            <h5>👥 Total Donors</h5>
-            <h2>{donorsCount}</h2>
-            <p className="text-muted">Registered Donors</p>
-          </div>
-        </div>
-
-        <div className="col-md-4">
-          <div className="card stat-card">
-            <h5>⚙️ Admin Tools</h5>
-            <button
-              className="btn btn-outline-dark btn-sm"
-              onClick={() => navigate('/managedonors')}
-            >
-              Manage Donors
-            </button>
             <button
               className="btn btn-outline-dark btn-sm mt-2"
               onClick={() => navigate('/queries')}
@@ -65,6 +53,36 @@ function AdminWel() {
             </button>
           </div>
         </div>
+
+        <div className="col-md-3">
+          <div className="card stat-card">
+            <h5>👥 Total Donors</h5>
+            <h2>{donorsCount}</h2>
+            <p className="text-muted">Registered Donors</p>
+            <button
+              className="btn btn-outline-dark btn-sm mt-2"
+              onClick={() => navigate('/managedonors')}
+            >
+              Manage Donors
+            </button>
+          </div>
+        </div>
+
+        <div className="col-md-3">
+          <div className="card stat-card">
+            <h5>🏥 Total Hospitals</h5>
+            <h2>{hospitalsCount}</h2>
+            <p className="text-muted">Registered Hospitals</p>
+            <button
+              className="btn btn-outline-dark btn-sm mt-2"
+              onClick={() => navigate('/managehospitals')}
+            >
+              Manage Hospitals
+            </button>
+          </div>
+        </div>
+
+        
       </div>
     </div>
   );

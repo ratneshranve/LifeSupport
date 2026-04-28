@@ -1,207 +1,311 @@
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f9;
-}
-
 .donor-dashboard {
-  padding: 60px 20px 40px;
+  padding: 80px 20px 40px;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 80vh;
 }
 
 .welcome-box {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .welcome-box h2 {
-  font-size: 36px;
-  font-weight: 700;
-  color: #dc3545;
-  margin-bottom: 10px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #c0392b;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
 }
 
 .small-text {
-  font-size: 16px;
-  color: #666;
+  font-size: 1.1rem;
+  color: #7f8c8d;
 }
 
 .dashboard-cards {
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px 10px;
+  justify-content: flex-start;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar for cleaner look but keep functionality */
+.dashboard-cards::-webkit-scrollbar {
+  height: 8px;
+}
+
+.dashboard-cards::-webkit-scrollbar-thumb {
+  background: #dc3545;
+  border-radius: 10px;
+}
+
+.dashboard-cards::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
 
 .card-block {
+  flex: 0 0 300px; /* Fixed width to maintain single line */
   background: #ffffff;
-  border-radius: 16px;
-  padding: 24px;
-  width: 100%;
-  max-width: 360px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-align: left;
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  height: 420px; 
   box-sizing: border-box;
-  text-align: center;
 }
 
 .card-block:hover {
-  transform: translateY(-4px);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
 .card-block h5 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #dc3545;
-  margin-bottom: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #c0392b;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #f9f9f9;
+  padding-bottom: 10px;
 }
 
 .card-block p {
-  font-size: 15px;
-  color: #444;
-  line-height: 1.6;
-}
-
-.action-buttons {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
-  align-items: center;
-  text-align: center;
-}
-
-.btn-primary,
-.btn-outline {
-  padding: 12px 28px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-  min-width: 180px;
-  box-sizing: border-box;
-}
-
-.btn-primary {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: #b52a37;
-}
-
-.btn-outline {
-  background-color: transparent;
-  border: 2px solid #dc3545;
-  color: #dc3545;
-}
-
-.btn-outline:hover {
-  background-color: #dc3545;
-  color: white;
-}
-.status-available {
-  color: green;
-  font-weight: bold;
-}
-
-.status-unavailable {
-  color: red;
-  font-weight: bold;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-.status-badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-top: 10px;
-  color: #fff;
-  background-color: #ccc;
-  text-align: center;
-  width: fit-content;
-}
-
-.status-available {
-  background-color: #4caf50; /* Green */
-}
-
-.status-unavailable {
-  background-color: #f44336; /* Red */
-}
-/* Specific styling for availability card */
-.card-block.availability-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 24px;
-  width: 100%;
-  max-width: 360px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-/* Heading in blue instead of red */
-.card-block.availability-card h5 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #dc3545;
+  font-size: 1rem;
+  color: #34495e;
+  line-height: 1.8;
   margin-bottom: 12px;
 }
 
-/* Text styling same as others */
-.card-block.availability-card p {
-  font-size: 15px;
-  color: #444;
-  line-height: 1.6;
+.info-list {
+  flex-grow: 1;
+}
+
+.blood-badge {
+  background: #c0392b;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-left: 5px;
+}
+
+.card-block strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Eligibility & Status Styles */
+/* Verification Steps UI */
+.verification-steps {
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex-grow: 1;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  transition: all 0.3s;
+}
+
+.step-item i {
+  font-size: 1.4rem;
+}
+
+.step-item.completed {
+  color: #10b981;
+}
+
+.step-item.active {
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.step-item.waiting {
+  opacity: 0.5;
+}
+
+.status-banner {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+  text-align: center;
+}
+
+.badge-verified {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 5px rgba(16, 185, 129, 0.1);
+}
+
+.badge-pending {
+  background: #fef3c7;
+  color: #92400e;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 5px rgba(245, 158, 11, 0.1);
+}
+
+
+/* Availability Styles */
+.status-text {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.status-text.available {
+  color: #27ae60;
+  background: rgba(39, 174, 96, 0.1);
+}
+
+.status-text.unavailable {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
+}
+
+.btn-toggle, .btn-upload {
+  margin-top: auto;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background: #c0392b;
+  color: white;
+  width: 100%;
+}
+
+.btn-toggle:hover, .btn-upload:hover {
+  background: #a93226;
+  box-shadow: 0 5px 15px rgba(192, 57, 43, 0.3);
+}
+
+/* Upload & Files */
+.file-input-wrapper {
+  margin-bottom: 20px;
+}
+
+.file-input-wrapper input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px dashed #bdc3c7;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.upload-msg {
+  margin-top: 15px;
+  font-size: 0.85rem !important;
+  font-weight: 600;
+  color: #27ae60 !important;
+}
+
+.scroll-list {
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.scroll-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.scroll-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.scroll-list::-webkit-scrollbar-thumb {
+  background: #dc3545;
+  border-radius: 10px;
+}
+
+/* Hospital List */
+.hospital-card ul {
+  list-style: none;
+  padding: 0;
   margin: 0;
 }
 
-/* Status styling */
-.card-block.availability-card .status-text {
-  font-weight: bold;
-  color: #4caf50;
+.hospital-card li {
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  color: #34495e;
+  display: flex;
+  flex-direction: column;
 }
 
-.card-block.availability-card .status-text.unavailable {
-  color: #f44336;
+.hospital-card li strong {
+  color: #c0392b;
 }
 
-/* Button styling to match but in blue */
-.card-block.availability-card button {
-  margin-top: 15px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  min-width: 180px;
+.hospital-card li span {
+  font-size: 0.8rem;
+  color: #7f8c8d;
 }
 
-.card-block.availability-card button:hover {
-  background-color: #dc3545;
-  transform: translateY(-2px);
+.hospital-card li:last-child {
+  border-bottom: none;
+}
+
+/* Responsive Fixes */
+@media (min-width: 1024px) {
+  .dashboard-cards {
+    overflow-x: visible; /* Disable scroll on laptop if fitting */
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+  
+  .card-block {
+    flex: 1 1 0; /* Allow equal growth to fill line */
+    max-width: 280px;
+    height: 440px; /* Slightly taller for better content fit */
+  }
+}
+
+@media (max-width: 1023px) {
+  .welcome-box h2 {
+    font-size: 2rem;
+  }
+  
+  .donor-dashboard {
+    padding-top: 40px;
+  }
 }
 

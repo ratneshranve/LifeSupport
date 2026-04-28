@@ -30,6 +30,23 @@ function EpAdmin() {
   }, []);
 
   const handleSubmit = () => {
+    if (!name || !mobile || !address || !city || !gender) {
+      return setOutput("All fields are required");
+    }
+
+    if (name.length < 3) {
+      return setOutput("Name must be at least 3 characters long");
+    }
+
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(mobile)) {
+      return setOutput("Mobile number must be exactly 10 digits");
+    }
+
+    if (address.length < 10) {
+      return setOutput("Address must be at least 10 characters long");
+    }
+
     const updatedAdmin = {
       condition_obj: { email },
       content_obj: { name, mobile, address, city, gender }

@@ -1,118 +1,273 @@
 .manage-donors-container {
-  background-color: #f6f8fb;
-  padding: 40px 20px;
-  min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
+  background: #fff5f5;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  max-width: 2500px;
+  margin: 32px auto;
+  border-top: 5px solid #e53e3e;
 }
 
 .manage-donors-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #b91c1c;
   text-align: center;
-  color: #c94c63;
-  font-size: 40px;
-  margin-bottom: 30px;
-  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
-.alert-error {
-  background-color: #f8d7da;
-  color: #842029;
-  padding: 15px;
-  border-radius: 8px;
-  margin: 0 auto 20px auto;
-  width: fit-content;
-  max-width: 600px;
-  text-align: center;
-  font-size: 16px;
-}
-
-.manage-donors-table {
-  width: 90%;
-  margin: 0 auto;
-  border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.manage-donors-table thead {
-  background-color: #1f1f23;
-  color: #fff;
-}
-
-.manage-donors-table th,
-.manage-donors-table td {
-  padding: 14px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-  font-size: 15px;
-}
-
-.manage-donors-table tbody tr:hover {
-  background-color: #f2f2f2;
-}
-
-.no-data {
-  text-align: center;
-  font-style: italic;
-  color: #666;
-  padding: 20px;
-}
-
-/* Action buttons */
-.btn-action {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  color: white;
-}
-
-.btn-action.green {
-  background-color: #28a745;
-}
-
-.btn-action.orange {
-  background-color: #ff9800;
-}
-
-.btn-action.red {
-  background-color: #dc3545;
-}
-
-.btn-action:hover {
-  opacity: 0.85;
-}
 .controls {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  justify-content: center;
 }
 
 .controls input,
 .controls select {
-  padding: 6px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #fca5a5;
+  font-size: 1rem;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.controls input:focus,
+.controls select:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+  outline: none;
+}
+
+.table-container {
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  overflow-x: auto; /* Enable horizontal scroll */
+  background: #fff;
+}
+
+.manage-donors-table {
+  width: 100%;
+  min-width: 1200px; /* Force minimum width to prevent squishing */
+  margin: 0 auto;
+  border-collapse: collapse;
+  table-layout: auto;
+  font-size: 0.95rem; /* Adjusted for better fit */
+}
+
+.manage-donors-table th,
+.manage-donors-table td {
+  white-space: nowrap; /* Prevent words from cutting/wrapping */
+  padding: 12px 15px;
+}
+
+.manage-donors-table th {
+  background: #fecaca;
+  color: #7f1d1d;
+  font-weight: 700;
+  border-bottom: 2px solid #f87171;
+  text-align: center;
+}
+
+.manage-donors-table td {
+  border-bottom: 1px solid #fee2e2;
+  text-align: center;
+  color: #374151;
+}
+
+.manage-donors-table tr:hover {
+  background: #fff1f2;
+}
+
+.eligibility-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-action {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Circular buttons */
+  border: none;
+  margin: 2px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-action:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-action i {
+  line-height: 1;
+}
+
+.btn-action.green {
+  background: #16a34a;
+  color: #fff;
+}
+.btn-action.green:hover {
+  background: #15803d;
+}
+
+.btn-action.orange {
+  background: #f97316;
+  color: #fff;
+}
+.btn-action.orange:hover {
+  background: #ea580c;
+}
+
+.btn-action.red {
+  background: #dc2626;
+  color: #fff;
+}
+.btn-action.red:hover {
+  background: #b91c1c;
+}
+
+.btn-action.blue {
+  background: #2563eb;
+  color: #fff;
+}
+.btn-action.blue:hover {
+  background: #1d4ed8;
+}
+
+.btn-action:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.report-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.report-link {
+  text-decoration: none;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.report-link:hover {
+  transform: scale(1.05);
+}
+
+.pdf-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pdf-preview i {
+  font-size: 2rem;
+  margin-bottom: 2px;
+}
+
+.image-preview-container {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #fee2e2;
+  background: #fff;
+}
+
+.report-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(220, 38, 38, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-size: 1.2rem;
+}
+
+.image-preview-container:hover .thumb-overlay {
+  opacity: 1;
+}
+
+.no-report {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+
+.alert-error {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid #fecaca;
 }
 
 .pagination {
-  margin-top: 20px;
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
 }
 
 .pagination button {
-  padding: 5px 10px;
-  border: none;
-  background-color: #6c757d;
-  color: white;
+  padding: 6px 14px;
   border-radius: 5px;
+  border: none;
+  background: #dc2626;
+  color: #fff;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pagination button:hover {
+  background: #b91c1c;
 }
 
 .pagination button:disabled {
-  background-color: #ccc;
+  background: #fca5a5;
+  color: #fff;
   cursor: not-allowed;
 }
 
+.pagination span {
+  color: #7f1d1d;
+  font-weight: 600;
+}

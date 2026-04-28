@@ -26,6 +26,11 @@ function CpDonor() {
       return;
     }
 
+    if (npass.length < 5 || npass.length > 10) {
+      setOutput("New password must be between 5 and 10 characters");
+      return;
+    }
+
     axios.get(`${donorApi}fetch?email=${email}&password=${opass}`)
       .then(response => {
         if (response.data.length > 0) {

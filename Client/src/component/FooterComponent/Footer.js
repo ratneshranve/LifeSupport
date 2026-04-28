@@ -5,7 +5,7 @@ function Footer() {
   const[footerContent,setFooterContent]=useState();
   useEffect(()=>{
     setInterval(()=>{
-        if(localStorage.getItem('role')=='donor'){
+        if(localStorage.getItem('role')=='donor' || localStorage.getItem('role')=='hospital'){
             setFooterContent(
                 <>
                 <div className="site-footer-bottom">
